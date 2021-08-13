@@ -1,13 +1,4 @@
 <div>
-    @if (session()->has('message'))
-        <div class="alert alert-primary alert-dismissible" role="alert">
-            {{ session('message') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-    <div wire:loading>
-        Processing...
-    </div>
     <form wire:submit.prevent="save">
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
@@ -16,4 +7,14 @@
         </div>
         <button type="submit" class="btn btn-sm btn-primary">Save</button>
     </form>
+
+    @if (session()->has('message') && session()->has('alertType'))
+        <script>
+            Swal.fire({
+            title: '',
+            text: "{{ session('message') }}",
+            icon: "{{ session('alertType') }}",
+            });
+        </script>
+    @endif
 </div>

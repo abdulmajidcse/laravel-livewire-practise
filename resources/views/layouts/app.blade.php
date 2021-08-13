@@ -12,7 +12,7 @@
 </head>
 <body>
 
-  <div wire:offline>
+  <div wire:offline class="text-center">
       You are now offline.
   </div>
 
@@ -47,6 +47,16 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.2/dist/sweetalert2.all.min.js"></script>
     @livewireScripts
+    <script>
+      @if (session()->has('message') && session()->has('alertType'))
+        Swal.fire({
+          title: '',
+          text: "{{ session('message') }}",
+          icon: "{{ session('alertType') }}",
+        });
+      @endif
+    </script>
 </body>
 </html>

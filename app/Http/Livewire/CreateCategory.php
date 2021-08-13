@@ -27,6 +27,7 @@ class CreateCategory extends Component
 
         $this->name = '';
         session()->flash('message', 'Category successfully saved.');
+        session()->flash('alertType', 'success');
     }
 
     public function render()
