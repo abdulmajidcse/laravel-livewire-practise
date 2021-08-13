@@ -11,7 +11,7 @@ class Counter extends Component
 
     public function increment()
     {
-        $this->count++;
+        $this->count += 2;
     }
 
     public function decrement()
