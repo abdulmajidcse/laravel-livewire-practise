@@ -10,12 +10,17 @@
             </thead>
             <tbody>
                 @foreach ($categories as $category)
-                    <tr>
+                    <tr wire:key="{{ $loop->index }}">
                         <th scope="row">{{ ++$loop->index }}</th>
                         <td>{{ $category->name }}</td>
                         <td>
                             <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-success">Edit</a>
-                            <a href="{{ route('categories.destroy', $category) }}" class="btn btn-sm btn-danger">Delete</a>
+                            @if($confirming===$category->id)
+                                <button wire:click="delete({{ $category->id }})" class="btn btn-sm btn-danger">Sure?</button>
+                                <button wire:click="deleteCancel" class="btn btn-sm btn-secondary">No</button>
+                            @else
+                                <button wire:click="deleteConfirm({{ $category->id }})" class="btn btn-sm btn-danger">Delete</button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

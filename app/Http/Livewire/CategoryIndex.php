@@ -10,6 +10,25 @@ class CategoryIndex extends Component
 {
     use WithPagination;
 
+    public $confirming;
+
+    public function deleteConfirm($id)
+    {
+        $this->confirming = $id;
+    }
+
+    public function deleteCancel()
+    {
+        $this->confirming = null;
+    }
+
+    public function delete($id)
+    {
+        Category::findOrFail($id)->delete();
+        session()->flash('message', 'Category successfully deleted.');
+        session()->flash('alertType', 'success');
+    }
+
     public function render()
     {
         $categories = Category::latest('id')->paginate(3);
