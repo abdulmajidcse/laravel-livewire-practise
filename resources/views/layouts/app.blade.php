@@ -26,10 +26,13 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
+                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" aria-current="page" href="{{ route('home') }}">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{{ route('categories.index') }}">Category</a>
+                    <a class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}">Category</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('posts.*') ? 'active' : '' }}" href="{{ route('posts.index') }}">Post</a>
                   </li>
                 </ul>
               </div>
@@ -58,5 +61,6 @@
         });
       @endif
     </script>
+    @stack('scripts')
 </body>
 </html>

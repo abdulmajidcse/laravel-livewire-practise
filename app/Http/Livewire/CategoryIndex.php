@@ -31,7 +31,7 @@ class CategoryIndex extends Component
 
     public function render()
     {
-        $categories = Category::latest('id')->paginate(3);
+        $categories = Category::latest('id')->paginate(10);
         return view('livewire.category-index', ['categories' => $categories]);
     }
 }
