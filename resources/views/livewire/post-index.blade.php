@@ -115,7 +115,9 @@
                 alert('A post was added');
                 let postModal = document.getElementById('postForm');
                 let imageField = document.getElementById('image');
-                // hide postModal code here
+                // hide postModal
+                const modal = bootstrap.Modal.getInstance(postModal);
+                modal.hide();
                 // reset image input field
                 imageField.value = '';
             });
