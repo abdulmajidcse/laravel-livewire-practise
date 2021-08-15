@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-md-6">Post List</div>
                     <div class="col-md-6 text-end">
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#postForm">Add New</button>
+                        <button type="button" wire:click="postModal('New Post')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#postForm">Add New</button>
                     </div>
                 </div>
             </div>
@@ -29,13 +29,14 @@
                                     <td>{{ $post->title }}</td>
                                     <td>{{ $post->created_at->format('Y-m-d') }}</td>
                                     <td>
-                                        <a href="{{ route('categories.edit', $post) }}" class="btn btn-sm btn-success">Edit</a>
-                                        {{-- @if($confirming===$post->id)
+                                        <button type="button" wire:click="postModal('Post View', {{ $post->id }}, 'show')" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#postView">View</button>
+                                        <button type="button" wire:click="postModal('Edit Post', {{ $post->id }}, 'edit')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#postForm">Edit</button>
+                                        @if($confirming===$post->id)
                                             <button wire:click="delete({{ $post->id }})" class="btn btn-sm btn-danger">Sure?</button>
                                             <button wire:click="deleteCancel" class="btn btn-sm btn-secondary">No</button>
                                         @else
                                             <button wire:click="deleteConfirm({{ $post->id }})" class="btn btn-sm btn-danger">Delete</button>
-                                        @endif --}}
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -54,39 +55,43 @@
         <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="postFormLabel">Post</h5>
+                <h5 class="modal-title" id="postFormLabel">{{ $modalTitle }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form wire:submit.prevent="save">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Category</label>
-                        <input type="text" wire:model="post.category_id" class="form-control" id="category_id" aria-describedby="category_idError">
-                        @error('post.category_id') <div id="category_idError" class="form-text text-danger">{{ $message }}</div>@enderror
+                        <select wire:model="form.category_id" class="form-control" id="category_id" aria-describedby="category_idError">
+                            <option>Select a category</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('form.category_id') <div id="category_idError" class="form-text text-danger">{{ $message }}</div>@enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
-                        <input type="text" wire:model="post.title" class="form-control" id="title" aria-describedby="titleError">
-                        @error('post.title') <div id="titleError" class="form-text text-danger">{{ $message }}</div>@enderror
+                        <input type="text" wire:model="form.title" class="form-control" id="title" aria-describedby="titleError">
+                        @error('form.title') <div id="titleError" class="form-text text-danger">{{ $message }}</div>@enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="content" class="form-label">Content</label>
-                        <textarea wire:model="post.content" class="form-control" id="content" aria-describedby="contentError" rows="3"></textarea>
-                        @error('post.content') <div id="contentError" class="form-text text-danger">{{ $message }}</div>@enderror
+                        <textarea wire:model="form.content" class="form-control" id="content" aria-describedby="contentError" rows="3"></textarea>
+                        @error('form.content') <div id="contentError" class="form-text text-danger">{{ $message }}</div>@enderror
                     </div>
 
-                    @if ($post['image'])
+                    @if ($postEdit)
                         <div class="my-3">
-                            Image Preview:
-                            <img src="{{ $post['image']->temporaryUrl() }}" style="width: 200px;">
+                            <img src="{{ Storage::url($postEdit->image) }}" style="width: 200px;">
                         </div>
                     @endif
                     <div class="mb-3">
                         <label for="image" class="form-label">Image</label>
-                        <input type="file" wire:model="post.image" class="form-control-file" id="image" aria-describedby="imageError">
-                        @error('post.image') <div id="imageError" class="form-text text-danger">{{ $message }}</div>@enderror
+                        <input type="file" wire:model="form.image" class="form-control-file" id="image" aria-describedby="imageError">
+                        @error('form.image') <div id="imageError" class="form-text text-danger">{{ $message }}</div>@enderror
                     </div>
                 </div>
 
@@ -96,6 +101,30 @@
                 </div>
             </form>
         </div>
+        </div>
+    </div>
+
+    <!-- post view modal -->
+    <div wire:ignore.self class="modal fade" id="postView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="postViewLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            @if ($postView)
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="postViewLabel">{{ $modalTitle }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Category: {{ $postView->category->name }}</p>
+                        <p>Title: {{ $postView->title }}</p>
+                        <p>Content: {{ $postView->content }}</p>
+                        <img src="{{ Storage::url($postView->image) }}" style="width: 200px;">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -111,8 +140,7 @@
 
     @push('scripts')
         <script>
-            Livewire.on('postAdded', () => {
-                alert('A post was added');
+            Livewire.on('modalClose', () => {
                 let postModal = document.getElementById('postForm');
                 let imageField = document.getElementById('image');
                 // hide postModal

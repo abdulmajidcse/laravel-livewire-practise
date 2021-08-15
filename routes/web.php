@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::resource('categories', CategoryController::class);
+Route::resource('categories', CategoryController::class)->except(['store', 'update', 'show', 'destroy']);
 
 // post routes
 Route::get('posts', PostIndex::class)->name('posts.index');

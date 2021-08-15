@@ -30,4 +30,15 @@
     <div class="float-end">
         {{ $categories->links('vendor.livewire.bootstrap') }}
     </div>
+
+    @if (session()->has('message') && session()->has('alertType'))
+        <script>
+            Swal.fire({
+            title: '',
+            text: "{{ session('message') }}",
+            icon: "{{ session('alertType') }}",
+            });
+        </script>
+    @endif
+    
 </div>
